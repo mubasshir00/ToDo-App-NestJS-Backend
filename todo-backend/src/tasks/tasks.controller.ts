@@ -21,36 +21,15 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(private taskService: TasksService) {}
 
-  // @Get()
-  // getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] {
-  //   if (Object.keys(filterDto).length) {
-  //     return this.taskService.getTaskWithFilter(filterDto);
-  //   } else {
-  //     return this.taskService.getAllTasks();
-  //   }
-  // }
+  @Get('/all')
+  getTasks() {
+    return this.taskService.getAllTasks();
+  }
 
-  @Get('/:id')
-  getTaskById(@Param('id', ParseIntPipe) id: number): Promise<Task> {    
+  @Get(':id')
+  getTaskById(@Param('id') id: number) {
+    console.log(id);
+
     return this.taskService.getTaskById(id);
   }
-
-  @Post()
-  @UsePipes(new ValidationPipe({ transform: true }))
-  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    return this.taskService.createTask(createTaskDto);
-  }
-
-  // @Delete('/:id')
-  // deleteTask(@Param('id') id: string): void {
-  //   this.taskService.deleteTask(id);
-  // }
-
-  // @Patch('/:id')
-  // updateTaskStatus(
-  //   @Param('id') id: string,
-  //   @Body('status', new TaskStatusValidationPipe()) status: TaskStatus,
-  // ) {
-  //   return this.taskService.updateTaskStatus(id, status);
-  // }
 }
