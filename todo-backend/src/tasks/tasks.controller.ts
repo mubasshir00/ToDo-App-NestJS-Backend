@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -24,28 +25,87 @@ export class TasksController {
   constructor(private taskService: TasksService) {}
 
   @Get('/all')
-  getTasks() {
-    return this.taskService.getAllTasks();
+  async getTasks(@Res() res: any) {
+    const result = await this.taskService.getAllTasks();
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        status: false,
+        status_message: 'Something went wrong',
+      });
+    }
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: number) {
+  async getTaskById(@Param('id') id: number, @Res() res: any) {
     // console.log(id);
-
-    return this.taskService.getTaskById(id);
+    const result = await this.taskService.getTaskById(id);
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        status: false,
+        status_message: 'No Data Found',
+      });
+    }
   }
 
   @Post()
-  async createTask(@Body() task: CreateTaskDto) {
-    return this.taskService.createTask(task);
+  async createTask(@Body() createTaskDto: CreateTaskDto, @Res() res: any) {
+    const result = await this.taskService.createTask(createTaskDto);
+
+    if (!result) {
+      return res.status(400).json({
+        status: false,
+        status_message: 'Something went wrong',
+      });
+    }
+
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        status_message: 'Success',
+        data: result,
+      });
+    }
   }
 
   @Put(':id')
-  async updatePost(@Param('id') id: number, @Body() task: UpdateTaskDto) {
-    console.log({id});
-    console.log({task});
-    
-    
-    return this.taskService.updateTask(id, task);
+  async updatePost(
+    @Param('id') id: number,
+    @Body() task: UpdateTaskDto,
+    @Res() res: any,
+  ) {
+    const result = await this.taskService.updateTask(id, task);
+    console.log({result});
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        status_message: 'Updated',
+      });
+    } else {
+      return res.status(400).json({
+        status:false,
+        status_message : 'No Data Found'
+      })
+    }
+  }
+
+  @Delete(':id')
+  async deletePost(@Param('id') id: number, @Res() res: any) {
+    const result = await this.taskService.deleteTask(id);
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        status_message: 'Deleted',
+      });
+    }
   }
 }
