@@ -12,19 +12,19 @@ import {
   Res,
   UsePipes,
   ValidationPipe,
-} from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
-import { Task } from './task.entity';
-import { TasksService } from './tasks.service';
+} from "@nestjs/common";
+import { CreateTaskDto } from "./dto/create-task.dto";
+import { UpdateTaskDto } from "./dto/update-task.dto";
+import { GetTasksFilterDto } from "./dto/get-tasks-filter.dto";
+import { TaskStatusValidationPipe } from "./pipes/task-status-validation.pipe";
+import { Task } from "./task.entity";
+import { TasksService } from "./tasks.service";
 
-@Controller('tasks')
+@Controller("tasks")
 export class TasksController {
   constructor(private taskService: TasksService) {}
 
-  @Get('/all')
+  @Get("/all")
   async getTasks(@Res() res: any) {
     const result = await this.taskService.getAllTasks();
     if (result) {
@@ -35,13 +35,13 @@ export class TasksController {
     } else {
       return res.status(400).json({
         status: false,
-        status_message: 'Something went wrong',
+        status_message: "Something went wrong",
       });
     }
   }
 
-  @Get(':id')
-  async getTaskById(@Param('id') id: number, @Res() res: any) {
+  @Get(":id")
+  async getTaskById(@Param("id") id: number, @Res() res: any) {
     // console.log(id);
     const result = await this.taskService.getTaskById(id);
     if (result) {
@@ -52,7 +52,7 @@ export class TasksController {
     } else {
       return res.status(400).json({
         status: false,
-        status_message: 'No Data Found',
+        status_message: "No Data Found",
       });
     }
   }
@@ -64,47 +64,47 @@ export class TasksController {
     if (!result) {
       return res.status(400).json({
         status: false,
-        status_message: 'Something went wrong',
+        status_message: "Something went wrong",
       });
     }
 
     if (result) {
       return res.status(200).json({
         status: true,
-        status_message: 'Success',
+        status_message: "Success",
         data: result,
       });
     }
   }
 
-  @Put(':id')
+  @Put(":id")
   async updatePost(
-    @Param('id') id: number,
+    @Param("id") id: number,
     @Body() task: UpdateTaskDto,
-    @Res() res: any,
+    @Res() res: any
   ) {
     const result = await this.taskService.updateTask(id, task);
-    console.log({result});
+    console.log({ result });
     if (result) {
       return res.status(200).json({
         status: true,
-        status_message: 'Updated',
+        status_message: "Updated",
       });
     } else {
       return res.status(400).json({
-        status:false,
-        status_message : 'No Data Found'
-      })
+        status: false,
+        status_message: "No Data Found",
+      });
     }
   }
 
-  @Delete(':id')
-  async deletePost(@Param('id') id: number, @Res() res: any) {
+  @Delete(":id")
+  async deletePost(@Param("id") id: number, @Res() res: any) {
     const result = await this.taskService.deleteTask(id);
     if (result) {
       return res.status(200).json({
         status: true,
-        status_message: 'Deleted',
+        status_message: "Deleted",
       });
     }
   }

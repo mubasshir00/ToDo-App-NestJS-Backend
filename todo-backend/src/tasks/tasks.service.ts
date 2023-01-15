@@ -1,15 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import { TaskStatus } from './task-status.enum';
-import { Task } from './task.entity';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CreateTaskDto } from "./dto/create-task.dto";
+import { UpdateTaskDto } from "./dto/update-task.dto";
+import { TaskStatus } from "./task-status.enum";
+import { Task } from "./task.entity";
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(Task) private taskRepository: Repository<Task>,
+    @InjectRepository(Task) private taskRepository: Repository<Task>
   ) {}
 
   //find all
@@ -41,22 +41,22 @@ export class TasksService {
     console.log({ id, task });
 
     const getTask = await this.getTaskById(id);
-    console.log({getTask});
-    if (!getTask){
-      return false ;
+    console.log({ getTask });
+    if (!getTask) {
+      return false;
     }
     const updateTask = await this.taskRepository.update(id, task);
 
     if (updateTask) {
       return updateTask;
     }
-    throw new HttpException('Task Not Found', HttpStatus.NOT_FOUND);
+    throw new HttpException("Task Not Found", HttpStatus.NOT_FOUND);
   }
 
   async deleteTask(id: number) {
     const deleteTask = await this.taskRepository.delete(id);
     if (!deleteTask.affected) {
-      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      throw new HttpException("Task not found", HttpStatus.NOT_FOUND);
     } else {
       return true;
     }
