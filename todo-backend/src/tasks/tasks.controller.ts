@@ -57,7 +57,7 @@ export class TasksController {
     }
   }
 
-  @Post()
+  @Post("/")
   async createTask(@Body() createTaskDto: CreateTaskDto, @Res() res: any) {
     const result = await this.taskService.createTask(createTaskDto);
 

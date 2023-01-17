@@ -5,6 +5,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { User } from "./user.entity";
 import * as bcrypt from "bcrypt";
 import { sign, verify } from "jsonwebtoken";
+import { UserLoginDto } from "./dto/user-login.dto";
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,38 @@ export class UsersService {
       console.log({ access_token });
       newUser.access_token = access_token;
       return newUser;
+    } catch (err) {
+      console.log({ err });
+
+      if (err.name === "QueryFailedError") {
+        // console.log(err.name);
+        if (
+          /^duplicate key value violates unique constraint/.test(err.message)
+        ) {
+          return {
+            error_message: "Email Already Exists",
+          };
+        } else {
+          console.log("Something went wrong");
+        }
+      }
+    }
+  }
+
+  async loginUser(userLoginDto: UserLoginDto) {
+    try {
+      const { email, password } = userLoginDto;
+      const result = await this.userRepository.findOne({ where: { email } });
+      if (result && bcrypt.compareSync(password, result.password)) {
+        const payload = { user_id: result.user_id };
+        const access_token = await sign(payload, "mubasshir", {
+          expiresIn: "6h",
+        });
+        return {
+          user_id: result.user_id,
+          access_token: access_token
+        };
+      }
     } catch (err) {
       console.log({ err });
 
