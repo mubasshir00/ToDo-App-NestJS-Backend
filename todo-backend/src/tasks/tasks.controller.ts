@@ -19,6 +19,7 @@ import { GetTasksFilterDto } from "./dto/get-tasks-filter.dto";
 import { TaskStatusValidationPipe } from "./pipes/task-status-validation.pipe";
 import { Task } from "./task.entity";
 import { TasksService } from "./tasks.service";
+import { TaskCustomRepository } from "./task.repository";
 
 @Controller("tasks")
 export class TasksController {

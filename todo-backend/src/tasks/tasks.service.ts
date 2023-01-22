@@ -5,16 +5,21 @@ import { CreateTaskDto } from "./dto/create-task.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
 import { TaskStatus } from "./task-status.enum";
 import { Task } from "./task.entity";
+import { TaskCustomRepository } from "./task.repository";
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(Task) private taskRepository: Repository<Task>
+    @InjectRepository(Task) private taskRepository: Repository<Task>,
+    private readonly taskCustomRepository: TaskCustomRepository
   ) {}
 
   //find all
-  getAllTasks() {
-    return this.taskRepository.find();
+  async getAllTasks() {
+    const tt = await this.taskCustomRepository.createTask();
+    console.log({tt});
+    
+    return await this.taskRepository.find();
   }
 
   async getTaskById(id: number) {

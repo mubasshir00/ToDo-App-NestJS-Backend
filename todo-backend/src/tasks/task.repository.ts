@@ -14,4 +14,14 @@ export class TaskCustomRepository {
   ) {
     this.ttl = "10000";
   }
+
+  async createTask() {
+    try {
+      let t = await this.redisClient.set("teesttt", "Hello");
+      console.log({t});
+      
+    } catch (e) {
+      console.log({ e });
+    }
+  }
 }
